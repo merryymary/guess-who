@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Guess Who: Blue Team</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">   
+    </head>
+    <body style="background-color: #3a1a1a;">
+        <a href="index.html" class="home-btn">← Home</a>
+        <section id="grid-section">
+            <h2 style="text-align:center; margin-top:2rem; color: rgb(241, 241, 99);">Guess Who</h2>
+            <div style="text-align: center;">
+            <label for="category-select" style="margin-right: 0.5rem;">Category:</label>
+            <select id="category-select">
+                <option value="celebrity">Celebrity</option>
+                <option value="characters">Characters</option>
+                <option value="creatures">Creatures</option>
+                <option value="tvshows">TV Shows</option>
+            </select>
+            </div>
+            <div id="grid-area">
+                <div id="playerCard">
+                    <h3>Your Card:</h3>
+                    <div class="square red-team myCard">
+                        <img class="photo" name="myPhoto" src="">
+                        <p class="name" id="myName"></p>
+                    </div>
+                    <small>Click your card to get a new character.</small>
+                </div>
+
+                <div id="grid-wrapper">
+                    <div id="grid" aria-label="Guess Who">
+                        <div class="square red-team">
+                            <img class="photo" id="photo-1" src="">
+                            <p class="name" id="name-1"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-2" src="">
+                            <p class="name" id="name-2"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-3" src="">
+                            <p class="name" id="name-3"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-4" src="">
+                            <p class="name" id="name-4"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-5" src="">
+                            <p class="name" id="name-5"></p>
+                        </div>
+
+                        <div class="square red-team">
+                            <img class="photo" id="photo-6" src="">
+                            <p class="name" id="name-6"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-7" src="">
+                            <p class="name" id="name-7"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-8" src="">
+                            <p class="name" id="name-8"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-9" src="">
+                            <p class="name" id="name-9"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-10" src="">
+                            <p class="name" id="name-10"></p>
+                        </div>
+
+                        <div class="square red-team">
+                            <img class="photo" id="photo-11" src="">
+                            <p class="name" id="name-11"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-12" src="">
+                            <p class="name" id="name-12"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-13" src="">
+                            <p class="name" id="name-13"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-14" src="">
+                            <p class="name" id="name-14"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-15" src="">
+                            <p class="name" id="name-15"></p>
+                        </div>
+
+                        <div class="square red-team">
+                            <img class="photo" id="photo-16" src="">
+                            <p class="name" id="name-16"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-17" src="">
+                            <p class="name" id="name-17"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-18" src="">
+                            <p class="name" id="name-18"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-19" src="">
+                            <p class="name" id="name-19"></p>
+                        </div>
+                        <div class="square red-team">
+                            <img class="photo" id="photo-20" src="">
+                            <p class="name" id="name-20"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="reset-btn" class="reset-btn">Reset</button>
+            </div>
+        </section>
+
+        <script type="text/javascript" src="guess-who.js"></script>
+    </body>
+</html>
