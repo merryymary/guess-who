@@ -3,6 +3,10 @@ const myCard = document.querySelector('.myCard');
 let cards = [];
 let randomCard = cards[0];
 
+// Password for TV Shows category (change as desired)
+const TV_PASSWORD = 'tonedogsucksatfortnite';
+// Track currently-selected category key so we can revert on bad password
+let currentCategory = 'celebrity';
 
 gridSquares.forEach(square => {
     square.addEventListener('click', () => {
@@ -112,11 +116,12 @@ const cardCategories = {
  }
 
 window.onload = () => {
-    updateCards(cardCategories.tvshows);
-    giveRandomCard();
+  // initialize with default category and set the select value
+  updateCards(cardCategories.celebrity, 'celebrity');
+  giveRandomCard();
 };
 
-function updateCards(cardArray) {
+function updateCards(cardArray, categoryKey) {
     for (const [idx, card] of cardArray.entries()) {
         const currPhoto = document.getElementById('photo-' + (idx + 1));
         const currName  = document.getElementById('name-'  + (idx + 1));
@@ -128,6 +133,7 @@ function updateCards(cardArray) {
     }
     cards = cardArray;
     giveRandomCard();
+    if (categoryKey) currentCategory = categoryKey;
 }
 
 function giveRandomCard() {
@@ -142,8 +148,26 @@ const categorySelect = document.getElementById('category-select');
 if (categorySelect) {
   categorySelect.addEventListener('change', (e) => {
     const selectedCategory = e.target.value;
-    const newCards = cardCategories[selectedCategory];
-    updateCards(newCards);
+    // If user selected the protected TV Shows category, require password
+    if (selectedCategory === 'tvshows') {
+      const attempt = window.prompt('Enter password to access TV Shows:');
+      if (attempt === null) {
+        // user cancelled prompt -> revert selection
+        categorySelect.value = currentCategory;
+        return;
+      }
+      if (attempt !== TV_PASSWORD) {
+        alert('Incorrect password — access denied.');
+        categorySelect.value = currentCategory;
+        return;
+      }
+      // correct password: proceed
+      const newCards = cardCategories[selectedCategory];
+      updateCards(newCards, selectedCategory);
+    } else {
+      const newCards = cardCategories[selectedCategory];
+      updateCards(newCards, selectedCategory);
+    }
   });
 }
 
