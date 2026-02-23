@@ -1,0 +1,31 @@
+name: Dev Channel Notifications
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  notify-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build Commit List
+        if: github.event_name == 'push'
+        run: |
+          echo "COMMITS<<EOF" >> $GITHUB_ENV
+          echo '${{ toJson(github.event.commits) }}' | jq -r '.[] |
+          "- **\(.message | gsub("\n"; " "))** — \(.author.name) (`\(.id[0:7])`)"' >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send to Dev Channel
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+          title: "🚀 Push to ${{ github.ref_name }}"
+          description: |
+            **Repo:** ${{ github.repository }}
+            **Author:** ${{ github.actor }}
+
+            ${{ env.COMMITS }}
+          color: 3447003
