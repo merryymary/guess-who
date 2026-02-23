@@ -24,14 +24,13 @@ jobs:
             **Merge Summary**
             ${{ github.event.head_commit.message }}
 
-            **Merged by:** ${{ github.actor }}
             **Branch:** development → main
 
             These changes will **go live** at the next server restart.
           color: 10824737
 
-      - name: Push to Development - Merry
-        if: github.actor == 'merryymary' && github.ref == 'refs/heads/development'
+      - name: PR Merged to Development - Merry
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'development' && github.actor == 'merryymary'
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_MERRY }}
@@ -43,8 +42,7 @@ jobs:
             **Push Summary**
             ${{ github.event.head_commit.message }}
       
-            **Commit ID:** `${{ github.event.head_commit.id }}`
-            **Branch:** development
+            **Branch:** ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
       
             This change will **not** be in the live server until it's merged
           color: 10824737      
