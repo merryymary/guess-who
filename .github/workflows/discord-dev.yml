@@ -58,20 +58,6 @@ jobs:
             **Branch:** `${{ github.ref_name }}`
             **Created by:** ${{ github.actor }}
           color: 10181046
-
-      - name: Build PR Commit List
-        if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main'
-        run: |
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          REPO=${{ github.repository }}
-          
-          # Fetch commit messages and authors from the PR
-          COMMITS=$(gh api repos/$REPO/pulls/$PR_NUMBER/commits \
-            | jq -r '.[] | "\(.sha[0:7]) \(.commit.message | gsub("\n"; " ")) - \(.commit.author.name)"')
-          
-          echo "PR_COMMITS<<EOF" >> $GITHUB_ENV
-          echo "$COMMITS" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
       
       - name: PR Opened to Main (Ping Role)
         if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main'
@@ -86,9 +72,6 @@ jobs:
             **Author:** ${{ github.actor }}
             **Branch:** ${{ github.event.pull_request.head.ref }} → main
             **PR URL:** ${{ github.event.pull_request.html_url }}
-      
-            **Commits:**
-            ${{ env.PR_COMMITS }}
           color: 3066993
 
       # Pull Request notification: development → main
