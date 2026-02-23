@@ -17,7 +17,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_MERRY }}
           nodetail: true
-          title: "🚀 Deployment Update"
+          title: ""
           description: |
             ✅ **${{ github.actor }} merged development to main**
 
@@ -30,46 +30,21 @@ jobs:
             These changes will go live at the next server restart.
           color: 10824737
 
-      # If the actor is "alice", use DISCORD_WEBHOOK_ALICE
-      - name: Deployment - Alice
-        if: github.actor == 'alice'
+      - name: Push to Development - Merry
+        if: github.actor == 'merryymary' && github.ref == 'refs/heads/development'
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_ALICE }}
-          content: " "
-          author_name: "${{ github.actor }}"
-          author_icon_url: "https://github.com/${{ github.actor }}.png"
-          title: "🚀 Deployment Update"
+          webhook: ${{ secrets.DISCORD_WEBHOOK_MERRY }}
+          nodetail: true
+          title: ""
           description: |
-            ✅ **${{ github.actor }} merged development to main**
-
-            **Merge Summary**
+            ✅ **${{ github.actor }} pushed to development**
+      
+            **Push Summary**
             ${{ github.event.head_commit.message }}
-
-            **Merged by:** ${{ github.actor }}
-            **Branch:** development → main
-
-            These changes will go live at the next server restart.
-          color: 3066993
-
-      # Optional: fallback for other authors
-      - name: Deployment - Default
-        if: github.actor != 'merryymary' && github.actor != 'alice'
-        uses: sarisia/actions-status-discord@v1
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
-          content: " "
-          author_name: "${{ github.actor }}"
-          author_icon_url: "https://github.com/${{ github.actor }}.png"
-          title: "🚀 Deployment Update"
-          description: |
-            ✅ **${{ github.actor }} merged development to main**
-
-            **Merge Summary**
-            ${{ github.event.head_commit.message }}
-
-            **Merged by:** ${{ github.actor }}
-            **Branch:** development → main
-
-            These changes will go live at the next server restart.
-          color: 3066993
+      
+            **Commit ID:** `${{ github.event.head_commit.id }}`
+            **Branch:** development
+      
+            This change will not be in the live server until it's merged
+          color: 10824737      
