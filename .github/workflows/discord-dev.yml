@@ -62,11 +62,13 @@ jobs:
       - name: Build PR Commit List
         if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main'
         run: |
-          # Build a commit list for the PR
-          COMMITS=$(echo '${{ toJson(github.event.pull_request.commits_url) }}' | jq -r '.')
-          # Note: github.event.pull_request.commits_url is a URL; better to fetch commits using GH CLI or API
-          # For simplicity, just using github.event.pull_request.commits for the array (some webhook events include this)
-          COMMITS=$(echo '${{ toJson(github.event.pull_request.commits) }}' | jq -r '.[] | "\(.sha[0:7]) \(.commit.message | gsub("\n"; " ")) - \(.commit.author.name)"')
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          # Fetch commit messages and authors from the PR
+          COMMITS=$(gh api repos/$REPO/pulls/$PR_NUMBER/commits \
+            | jq -r '.[] | "\(.sha[0:7]) \(.commit.message | gsub("\n"; " ")) - \(.commit.author.name)"')
+          
           echo "PR_COMMITS<<EOF" >> $GITHUB_ENV
           echo "$COMMITS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
