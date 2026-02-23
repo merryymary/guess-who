@@ -14,21 +14,25 @@ jobs:
       - name: Build Commit List
         if: github.event_name == 'push'
         run: |
+          # Only show branch in the header
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          COMMIT_COUNT=$(echo "${{ toJson(github.event.commits) }}" | jq length)
           echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo '${{ toJson(github.event.commits) }}' | jq -r '.[] |
-          "- **\(.message | gsub("\n"; " "))** — \(.author.name) (`\(.id[0:7])`)"' >> $GITHUB_ENV
+          echo "[$BRANCH_NAME] $COMMIT_COUNT new commit(s)" >> $GITHUB_ENV
+          # Add each commit in GitHub style: short SHA + message + author
+          echo '${{ toJson(github.event.commits) }}' | jq -r '.[] | "\(.id[0:7]) \(.message | gsub("\n"; " ")) - \(.author.name)"' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send to Dev Channel
+        if: github.event_name == 'push' && github.event.commits && length(github.event.commits) > 0 && github.event.created != true
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
-          nodetail: true
+          content: " "
           title: "🚀 Push to ${{ github.ref_name }}"
           description: |
-            **Repo:** ${{ github.repository }}
             **Author:** ${{ github.actor }}
-
+      
             ${{ env.COMMITS }}
           color: 3447003
           
