@@ -30,7 +30,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send Push to Dev Channel
-        if: github.event_name == 'push' && github.event.commits && github.event.commits != '[]'
+        if: github.event_name == 'push' && env.COMMITS
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
