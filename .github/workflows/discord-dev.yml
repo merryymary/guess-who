@@ -65,7 +65,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
           nodetail: true
-          content: "<@1475497736190296194>"  # ping role
+          content: "<@&1475497736190296194>"  # ping role
           title: "📥 Pull Request Opened → main"
           description: |
             **PR Name:** ${{ github.event.pull_request.title }}
