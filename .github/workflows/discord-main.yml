@@ -16,9 +16,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_MERRY }}
-          content: " "
-          author_name: "${{ github.actor }}"
-          author_icon_url: "https://github.com/${{ github.actor }}.png"
+          nodetail: true
           title: "🚀 Deployment Update"
           description: |
             ✅ **${{ github.actor }} merged development to main**
@@ -30,7 +28,7 @@ jobs:
             **Branch:** development → main
 
             These changes will go live at the next server restart.
-          color: 3066993
+          color: 10824737
 
       # If the actor is "alice", use DISCORD_WEBHOOK_ALICE
       - name: Deployment - Alice
