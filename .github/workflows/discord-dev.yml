@@ -1,5 +1,6 @@
 name: Dev Channel Notifications
 on:
+  create:
   push:
     branches-ignore:
       - main
@@ -22,6 +23,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+          nodetail: true
           title: "🚀 Push to ${{ github.ref_name }}"
           description: |
             **Repo:** ${{ github.repository }}
@@ -29,3 +31,18 @@ jobs:
 
             ${{ env.COMMITS }}
           color: 3447003
+          
+      # New branch creation notification
+      - name: New Branch Created
+        if: github.event_name == 'create' && github.event.ref_type == 'branch'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+          nodetail: true
+          content: " "
+          title: "🌿 New Branch Created"
+          description: |
+            **Repository:** ${{ github.repository }}
+            **Branch:** `${{ github.ref_name }}`
+            **Created by:** ${{ github.actor }}
+          color: 10181046
