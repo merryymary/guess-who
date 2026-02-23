@@ -19,7 +19,7 @@ jobs:
           nodetail: true
           title: ""
           description: |
-            ✅ **Merry merged development to main**
+            ✅ ** Merry merged development to main**
 
             **Merge Summary**
             ${{ github.event.head_commit.message }}
@@ -38,7 +38,7 @@ jobs:
           nodetail: true
           title: ""
           description: |
-            ✅ **Merry pushed to development**
+            ✅ ** Merry pushed to development**
       
             **Push Summary**
             ${{ github.event.head_commit.message }}
