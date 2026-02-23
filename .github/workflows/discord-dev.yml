@@ -40,13 +40,26 @@ jobs:
             ${{ env.COMMITS }}
           color: 3447003
           
-      # New branch creation notification
-      - name: New Branch Created
+      # New branch created (UI)
+      - name: New Branch Created (UI)
+        if: github.event_name == 'create' && github.event.ref_type == 'branch'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
+          content: " "
+          title: "🌿 New Branch Created"
+          description: |
+            **Branch:** `${{ github.ref_name }}`
+            **Created by:** ${{ github.actor }}
+          color: 10181046
+      
+      # New branch created (first push)
+      - name: New Branch Created (First Push)
         if: github.event_name == 'push' && github.event.created == true
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
-          nodetail: true
+          content: " "
           title: "🌿 New Branch Created"
           description: |
             **Branch:** `${{ github.ref_name }}`
@@ -59,6 +72,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
+          nodetail: true
           content: "<@1475497736190296194>"  # ping role
           title: "📥 Pull Request Opened → main"
           description: |
@@ -69,12 +83,12 @@ jobs:
           color: 3066993
 
       # Pull Request notification: development → main
-      - name: PR Opened to Main (Ping Role)
+      - name: PR Closed to Main (No Ping)
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
-          content: "<@1475497736190296194>"  # ping role
+          nodetail: true
           title: "${{ github.event.pull_request.merged && '✅ Pull Request Merged' || '❌ Pull Request Closed' }}"
           description: |
             **PR Name:** ${{ github.event.pull_request.title }}
