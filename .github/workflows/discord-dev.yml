@@ -12,17 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build Commit List
-        if: github.event_name == 'push' && github.event.commits       
+        if: github.event_name == 'push'
         run: |
-          # Branch name
           BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          # Number of commits
-          COMMIT_COUNT=$(echo "${{ toJson(github.event.commits) }}" | jq length)
-          # Start commit list
+          COMMIT_COUNT=$(echo '${{ toJson(github.event.commits) }}' | jq length)
+      
+          if [ "$COMMIT_COUNT" -eq 0 ]; then
+            echo "No commits, skipping build"
+            exit 0
+          fi
+      
+          COMMITS="[$BRANCH_NAME] $COMMIT_COUNT new commit(s)\n"
+          COMMITS+=$(echo '${{ toJson(github.event.commits) }}' | jq -r '.[] | "\(.id[0:7]) \(.message | gsub("\n"; " ")) - \(.author.name)"')
+      
           echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo "[$BRANCH_NAME] $COMMIT_COUNT new commit(s)" >> $GITHUB_ENV
-          # Add each commit in GitHub-style format
-          echo '${{ toJson(github.event.commits) }}' | jq -r '.[] | "\(.id[0:7]) \(.message | gsub("\n"; " ")) - \(.author.name)"' >> $GITHUB_ENV
+          echo "$COMMITS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send Push to Dev Channel
