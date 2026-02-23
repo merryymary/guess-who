@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build Commit List
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.event.created == false
         run: |
           # Get commit count
           COMMIT_COUNT=$(echo "${{ toJson(github.event.commits) }}" | jq length)
@@ -28,7 +28,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send to Dev Channel
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.event.created == false
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
@@ -47,7 +47,6 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
           nodetail: true
-          content: " "
           title: "🌿 New Branch Created"
           description: |
             **Branch:** `${{ github.ref_name }}`
@@ -71,7 +70,7 @@ jobs:
 
       # Pull Request notification: development → main
       - name: PR Opened to Main (Ping Role)
-        if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_MAIN }}
