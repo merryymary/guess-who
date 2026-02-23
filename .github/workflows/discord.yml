@@ -87,6 +87,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
+          content: ""          # Important: leave empty to avoid extra default text
           author_name: "${{ github.actor }}"
           author_icon_url: "https://github.com/${{ github.actor }}.png"
           title: "🚀 Deployment Update"
