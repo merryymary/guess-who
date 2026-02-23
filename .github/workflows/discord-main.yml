@@ -1,0 +1,28 @@
+name: Main Channel Notifications
+on:
+  push:
+    branches:
+      - main
+jobs:
+  notify-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment to Main
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
+          content: " "
+          author_name: "${{ github.actor }}"
+          author_icon_url: "https://github.com/${{ github.actor }}.png"
+          title: "🚀 Deployment Update"
+          description: |
+            ✅ **${{ github.actor }} merged development to main**
+
+            **Merge Summary**
+            ${{ github.event.head_commit.message }}
+
+            **Merged by:** ${{ github.actor }}
+            **Branch:** development → main
+
+            These changes will go live at the next server restart.
+          color: 3066993
