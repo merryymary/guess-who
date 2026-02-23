@@ -11,7 +11,7 @@ jobs:
 
     steps:
       # If the actor is "merryymary", use DISCORD_WEBHOOK_MERRY
-      - name: Deployment - Merry
+      - name: Development - Merry
         if: github.actor == 'merryymary'
         uses: sarisia/actions-status-discord@v1
         with:
