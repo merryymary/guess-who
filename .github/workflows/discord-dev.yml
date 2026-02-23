@@ -58,7 +58,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_MAIN }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
           content: "<@1475497736190296194>"  # ping role
           title: "📥 Pull Request Opened → main"
           description: |
@@ -73,7 +73,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_MAIN }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
           content: "<@1475497736190296194>"  # ping role
           title: "${{ github.event.pull_request.merged && '✅ Pull Request Merged' || '❌ Pull Request Closed' }}"
           description: |
