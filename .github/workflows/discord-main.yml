@@ -1,12 +1,10 @@
 name: Main Channel Notifications
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - development
+      - main
     types: [closed]
 jobs:
   notify-main:
@@ -14,8 +12,8 @@ jobs:
 
     steps:
       # If the actor is "merryymary", use DISCORD_WEBHOOK_MERRY
-      - name: Push to Main - Merry
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.actor == 'merryymary' 
+      - name: PR Merged to Main - Merry
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.actor == 'merryymary'
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_MERRY }}
@@ -24,10 +22,12 @@ jobs:
           description: |
             ✅ ** Merry merged development to main**
 
-            **Merge Summary** 
-            ${{ github.event.head_commit.message }} 
-            
-            **Branch:** development → main
+            **PR Title:** ${{ github.event.pull_request.title }}
+            **Branch:** ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
+            **PR ID:** ${{ github.event.pull_request.id }}
+
+            **Summary**
+            ${{ github.event.pull_request.body }}
 
             These changes will **go live** at the next server restart.
           color: 10824737
@@ -42,15 +42,12 @@ jobs:
           description: |
             ✅ ** Merry merged to development**
       
-              **PR Name:** ${{ github.event.pull_request.title }}
-              **Author:** ${{ github.actor }}
+              **PR Title:** ${{ github.event.pull_request.title }}
               **Branch:** ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
-              **PR URL:** ${{ github.event.pull_request.html_url }}
+              **PR ID:** ${{ github.event.pull_request.id }}
               
               **Summary**
               ${{ github.event.pull_request.body }}
-      
-            **Branch:** ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
-      
+            
             This change will **not** be in the live server until it's merged
           color: 10824737 
