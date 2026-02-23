@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+      types: [opened, closed]
 jobs:
   notify-dev:
     runs-on: ubuntu-latest
@@ -14,21 +15,28 @@ jobs:
       - name: Build Commit List
         if: github.event_name == 'push'
         run: |
+          # Get commit count
+          COMMIT_COUNT=$(echo "${{ toJson(github.event.commits) }}" | jq length)
+          # Build the header like [repo:branch] X new commits
+          REPO_NAME="${{ github.repository_name }}"  # repo name only
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
           echo "COMMITS<<EOF" >> $GITHUB_ENV
+          echo "[$REPO_NAME:$BRANCH_NAME] $COMMIT_COUNT new commit(s)" >> $GITHUB_ENV
+          # Add each commit in format: short SHA + message + author
           echo '${{ toJson(github.event.commits) }}' | jq -r '.[] |
-          "- **\(.message | gsub("\n"; " "))** — \(.author.name) (`\(.id[0:7])`)"' >> $GITHUB_ENV
+            "\(.id[0:7]) \(.message | gsub("\n"; " ")) - \(.author.name)"' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send to Dev Channel
+        if: github.event_name == 'push'
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
-          nodetail: true
+          content: " "
           title: "🚀 Push to ${{ github.ref_name }}"
           description: |
-            **Repo:** ${{ github.repository }}
             **Author:** ${{ github.actor }}
-
+      
             ${{ env.COMMITS }}
           color: 3447003
           
@@ -42,7 +50,36 @@ jobs:
           content: " "
           title: "🌿 New Branch Created"
           description: |
-            **Repository:** ${{ github.repository }}
             **Branch:** `${{ github.ref_name }}`
             **Created by:** ${{ github.actor }}
           color: 10181046
+
+      # Pull Request notification: development → main
+      - name: PR Opened to Main (Ping Role)
+        if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_MAIN }}
+          content: "<@1475497736190296194>"  # ping role
+          title: "📥 Pull Request Opened → main"
+          description: |
+            **PR Name:** ${{ github.event.pull_request.title }}
+            **Author:** ${{ github.actor }}
+            **Branch:** development → main
+            **PR URL:** ${{ github.event.pull_request.html_url }}
+          color: 3066993
+
+      # Pull Request notification: development → main
+      - name: PR Opened to Main (Ping Role)
+        if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_MAIN }}
+          content: "<@1475497736190296194>"  # ping role
+          title: "${{ github.event.pull_request.merged && '✅ Pull Request Merged' || '❌ Pull Request Closed' }}"
+          description: |
+            **PR Name:** ${{ github.event.pull_request.title }}
+            **Author:** ${{ github.actor }}
+            **Branch:** development → main
+            **PR URL:** ${{ github.event.pull_request.html_url }}
+          color: ${{ github.event.pull_request.merged && 3066993 || 15158332 }}
