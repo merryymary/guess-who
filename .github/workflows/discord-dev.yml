@@ -37,22 +37,8 @@ jobs:
             ${{ env.COMMITS }}
           color: 3447003
           
-      # Branch created via GitHub UI (no commits yet)
-      - name: New Branch Created (UI)
-        if: github.event_name == 'create' && github.event.ref_type == 'branch'
-        uses: sarisia/actions-status-discord@v1
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
-          nodetail: true
-          title: "🌿 New Branch Created"
-          description: |
-            **Branch:** `${{ github.ref_name }}`
-            **Created by:** ${{ github.actor }}
-          color: 10181046
-      
-      # Branch created with first push
-      - name: New Branch Created (First Push)
-        if: github.event_name == 'push' && github.event.created == true
+      - name: New Branch Created
+        if: (github.event_name == 'create' && github.event.ref_type == 'branch') || (github.event_name == 'push' && github.event.created == true)
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
