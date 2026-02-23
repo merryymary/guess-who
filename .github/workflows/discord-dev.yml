@@ -58,29 +58,28 @@ jobs:
             **Branch:** `${{ github.ref_name }}`
             **Created by:** ${{ github.actor }}
           color: 10181046
-
-      # Pull Request notification: development → main
+      
       - name: PR Opened to Main (Ping Role)
-        if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+        if: github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.base.ref == 'main'
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
           nodetail: true
           content: "<@1475497736190296194>"  # ping role
           title: "📥 Pull Request Opened → main"
           description: |
             **PR Name:** ${{ github.event.pull_request.title }}
             **Author:** ${{ github.actor }}
-            **Branch:** development → main
+            **Branch:** ${{ github.event.pull_request.head.ref }} → main
             **PR URL:** ${{ github.event.pull_request.html_url }}
           color: 3066993
 
       # Pull Request notification: development → main
       - name: PR Closed to Main (No Ping)
-        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.base.ref == 'main'
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_SECONDARY }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_DEV }}
           nodetail: true
           title: "${{ github.event.pull_request.merged && '✅ Pull Request Merged' || '❌ Pull Request Closed' }}"
           description: |
