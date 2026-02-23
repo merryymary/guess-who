@@ -19,7 +19,7 @@ jobs:
           nodetail: true
           title: ""
           description: |
-            ✅ **${{ github.actor }} merged development to main**
+            ✅ ** Merry merged development to main**
 
             **Merge Summary**
             ${{ github.event.head_commit.message }}
@@ -27,7 +27,7 @@ jobs:
             **Merged by:** ${{ github.actor }}
             **Branch:** development → main
 
-            These changes will go live at the next server restart.
+            These changes will **go live** at the next server restart.
           color: 10824737
 
       - name: Push to Development - Merry
@@ -38,7 +38,7 @@ jobs:
           nodetail: true
           title: ""
           description: |
-            ✅ **${{ github.actor }} pushed to development**
+            ✅ ** Merry pushed to development**
       
             **Push Summary**
             ${{ github.event.head_commit.message }}
@@ -46,5 +46,5 @@ jobs:
             **Commit ID:** `${{ github.event.head_commit.id }}`
             **Branch:** development
       
-            This change will not be in the live server until it's merged
+            This change will **not** be in the live server until it's merged
           color: 10824737      
