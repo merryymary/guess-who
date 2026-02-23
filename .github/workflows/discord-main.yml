@@ -24,7 +24,9 @@ jobs:
           description: |
             ✅ ** Merry merged development to main**
 
-            **Merge Summary** ${{ github.event.head_commit.message }} 
+            **Merge Summary** 
+            ${{ github.event.head_commit.message }} 
+            
             **Branch:** development → main
 
             These changes will **go live** at the next server restart.
@@ -38,12 +40,15 @@ jobs:
           nodetail: true
           title: ""
           description: |
-            ✅ ** Merry pushed to development**
+            ✅ ** Merry merged to development**
       
-            **PR Title / Summary**
-            ${{ github.event.pull_request.title }}
-      
-            **Commit ID:** `${{ github.event.head_commit.id }}`
+              **PR Name:** ${{ github.event.pull_request.title }}
+              **Author:** ${{ github.actor }}
+              **Branch:** ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
+              **PR URL:** ${{ github.event.pull_request.html_url }}
+              
+              **Summary**
+              ${{ github.event.pull_request.body }}
       
             **Branch:** ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
       
