@@ -4,15 +4,18 @@ on:
   push:
     branches:
       - main
-
+  pull_request:
+    branches:
+      - development
+    types: [closed]
 jobs:
   notify-main:
     runs-on: ubuntu-latest
 
     steps:
       # If the actor is "merryymary", use DISCORD_WEBHOOK_MERRY
-      - name: Development - Merry
-        if: github.actor == 'merryymary'
+      - name: Push to Main - Merry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.actor == 'merryymary' 
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_MERRY }}
@@ -21,9 +24,7 @@ jobs:
           description: |
             ✅ ** Merry merged development to main**
 
-            **Merge Summary**
-            ${{ github.event.head_commit.message }}
-
+            **Merge Summary** ${{ github.event.head_commit.message }} 
             **Branch:** development → main
 
             These changes will **go live** at the next server restart.
@@ -39,10 +40,12 @@ jobs:
           description: |
             ✅ ** Merry pushed to development**
       
-            **Push Summary**
-            ${{ github.event.head_commit.message }}
+            **PR Title / Summary**
+            ${{ github.event.pull_request.title }}
+      
+            **Commit ID:** `${{ github.event.head_commit.id }}`
       
             **Branch:** ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
       
             This change will **not** be in the live server until it's merged
-          color: 10824737      
+          color: 10824737 
