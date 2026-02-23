@@ -99,6 +99,5 @@ jobs:
             **Merged by:** ${{ github.actor }}
             **Branch:** development → main
       
-            ---
-            _These changes will go live at the next server restart._
+            These changes will go live at the next server restart.
           color: 3066993
