@@ -17,13 +17,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Build commits for non main branches
       - name: Build Commit List (Push Events Only)
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
         run: |
           echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo '${{ toJson(github.event.commits) }}' | jq -r '.[] |
-          "- **\(.message | gsub("\n"; " "))** — \(.author.name) (`\(.id[0:7])`)"' \
-          >> $GITHUB_ENV
+          echo '${{ toJson(github.event.commits) }}' | jq -r '.[] | "- **\(.message | gsub("\n"; " "))** — \(.author.name) (`\(.id[0:7])`)"' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           
       # Pull Request Opened to Main
